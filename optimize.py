@@ -35,4 +35,9 @@ ubc = 1.13
 lbs = 0.996
 ubs = 1
 
-lb
+lbg = 0.98
+ubg = 1
+
+
+#define a brute force by subdividing the boundaries into halves k times
+k = 1
