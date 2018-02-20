@@ -44,6 +44,33 @@ f2bounds = [[lbs,ubs],
             [lbg,ubg],
             [lbc,ubc]]
 #define a brute force by subdividing the boundaries into halves k times
-def simple(valueFunction, iterations, *parameterBounds):
-    for k in 1 to iterations:
+def bruteSearch(funct, iterations, *parameterBounds):
+    #initialize a coordinate variable, as well as a value list for graphing. here the last thing in pc is the return of the value function and the rest is an ordered list of parameter values
+    pc = [0 for x in xrange(len(parameterBounds))].extend(0)
+    values = [pc for x in range(2**iterations - 1)]
+    best = pc
+    
+    #next we define some useful information for the iterator
+    #the iteration works by starting from the center, then moving by boundarysize/2^iterations in each direction. This allows for the omission of boundary conditional statements
+    stepsize = pc
+    steps.pop()
 
+
+
+
+
+    #here we iterate
+    for iteration in xrange(iterations):
+    
+    
+        
+        
+        
+        
+        
+        
+    #here we return our coordinates, along with the best coordinate. note that append is used instead of extend here.
+    #this is because extend stores the entire best array in the last index of values, so values(len(values)-1) is always best, regardless of the size of best.
+    #effectively we include the length information of best implicitly in the structure of the return array
+   values.append(best)
+   return values
