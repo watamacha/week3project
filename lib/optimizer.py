@@ -147,7 +147,6 @@ def bruteSearch(funct, stepsperparam, parameterBounds):
     #must be 2 lines since append method does not return the result of the append.
     coord = [0. for x in co]
     coord.append(ord)
-    print(co)
     #define our coords array, which is just an array of known coordinates, as well as bco, bord, and bcoord, which are the co, ord, and coord for the current best
     #since we aim to minimize, we initialize bord to a high enough value that we can find something below it.
     values = []
@@ -156,17 +155,12 @@ def bruteSearch(funct, stepsperparam, parameterBounds):
     bcoord = bco
     bcoord.append(bord)
     #next we calculate stepsizes using lower and upper bounds
-    stepsize = [(parameterBounds[p][1]-parameterBounds[p][0])/(stepsperparam) for p in range(df)]
+    stepsize = [float((parameterBounds[p][1]-parameterBounds[p][0])/(stepsperparam)) for p in range(df)]
     print("stepsize array: ", stepsize)
     #we also define sco, the same as co but encoded as integer number of steps
     sco = [0 for x in co]
     #next we define our startpoint as the minimum of all parameters
     co = [x[0] for x in parameterBounds]
-    #we define a function to cleanly update ord and coord given co
-    def up(ico):
-        ord = v(funct, ico)
-        coord = ico
-        coord.append(ord)
     #now we define the number of points we will evaluate
     points = (stepsperparam + 1)**df
     ###END LOCALS DEFINITION
@@ -182,9 +176,11 @@ def bruteSearch(funct, stepsperparam, parameterBounds):
     for i in range(points):
         sco = [i for p in range(df)]
         #co = [stepsize[p] * sco[p] for p in range(df)]
-        co = [(sco[0]+0) * (stepsize[0]+0.0)]
-        up(co)
-        print("evaluated ", sco, co, ord, coord)
+        co = [float(((stepsize[p]+0.0)*(sco[p]+0))+parameterBounds[p][0]) for p in range(df)]
+        #we define a function to cleanly update ord and coord given co
+        ord = v(funct, co)
+        coord = co
+        coord.append(ord)
         values.append(coord)
         if ord < bord:
             bco = co
