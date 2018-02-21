@@ -18,7 +18,9 @@ def f1(n,params):
 def f2(n,params):
     s = params[0]
     g = params[1]
-    c = params[3]
+    c = params[2]
+    if math.log(g) > (0-1)/1000000*math.log(c):
+        return 0
     return (s**n)*(g**((c**n) - 1))
 
 #define value function, sum of error squares. must be minimized.
@@ -33,7 +35,7 @@ lbr = 0-0.01
 ubr = 0.
 
 lbc = 1.07
-ubc = 1.13
+ubc = 1.125
 
 lbs = 0.996
 ubs = 1.
@@ -174,7 +176,7 @@ def bruteSearch(funct, stepsperparam, parameterBounds):
     #resetting i at every j increments of k is done by i = k%j
     #result is (i//stepsperparam**(p-1))%(stepsperparam**p)
     for i in range(points):
-        sco = [i for p in range(df)]
+        sco = [(i//((stepsperparam+1)**(p)))%((stepsperparam+1)**(p+1)) for p in range(df)]
         #co = [stepsize[p] * sco[p] for p in range(df)]
         co = [float(((stepsize[p]+0.0)*(sco[p]+0))+parameterBounds[p][0]) for p in range(df)]
         #we define a function to cleanly update ord and coord given co
