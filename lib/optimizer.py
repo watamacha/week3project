@@ -19,8 +19,6 @@ def f2(n,params):
     s = params[0]
     g = params[1]
     c = params[2]
-    if math.log(g) > (0-1)/1000000*math.log(c):
-        return 0
     return (s**n)*(g**((c**n) - 1))
 
 #define value function, sum of error squares. must be minimized.
@@ -41,7 +39,7 @@ lbs = 0.996
 ubs = 1.
 
 lbg = 0.98
-ubg = 1.
+ubg = 0.999
 
 f1bounds = [[lbr,ubr]]
 
@@ -56,8 +54,10 @@ f2bounds = [[lbs,ubs],
 
 
 
-
-
+def getstepsizes(stepsperparam, parameterBounds):
+    stepsize = [float((parameterBounds[p][1]-parameterBounds[p][0])/(stepsperparam)) for p in range(len(parameterBounds))]
+    print("stepsize array: ", stepsize)
+    return stepsize
 
 
 def bruteSearchold(funct, iterations, parameterBounds):
@@ -167,7 +167,6 @@ def bruteSearch(funct, stepsperparam, parameterBounds):
     points = (stepsperparam + 1)**df
     ###END LOCALS DEFINITION
 
-
     ###FUNCTION DEFINITION:
     #now we begin iterating.
     #from our start coordinate, we move p1 up every step, and reset it every stepsperparam steps.
@@ -176,9 +175,16 @@ def bruteSearch(funct, stepsperparam, parameterBounds):
     #resetting i at every j increments of k is done by i = k%j
     #result is (i//stepsperparam**(p-1))%(stepsperparam**p)
     for i in range(points):
-        sco = [(i//((stepsperparam+1)**(p)))%((stepsperparam+1)**(p+1)) for p in range(df)]
+        if df > 1:
+            sco[0] += 1
+            for i in range(df-1):
+                if sco[i] == stepsperparam+1:
+                    sco[i+1] = sco[i+1] + 1
+                    sco[i] = 0
+        if df == 1:
+            sco[0] = i % (stepsperparam + 1)
         #co = [stepsize[p] * sco[p] for p in range(df)]
-        co = [float(((stepsize[p]+0.0)*(sco[p]+0))+parameterBounds[p][0]) for p in range(df)]
+        co = [float(((stepsize[p])*(sco[p]))+parameterBounds[p][0]) for p in range(df)]
         #we define a function to cleanly update ord and coord given co
         ord = v(funct, co)
         coord = co
@@ -188,7 +194,7 @@ def bruteSearch(funct, stepsperparam, parameterBounds):
             bco = co
             bord = ord
             bcoord = coord
-            print("found new optimum of ", bord, " at ", bco)
+            #print("found new optimum of ", bord, " at ", bco)
     values.append(bcoord)
     ###END FUNCTION DEFINITION
 
