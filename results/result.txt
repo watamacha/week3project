@@ -1,0 +1,7 @@
+best r: -0.00586808 with stepsize of 8e-8
+error of 0.22779108496305442 with 125000 steps
+
+best s: 0.99892 with stepsize 4e-5
+best g: 0.999 with stepsize 1.9e-4
+best c: 1.0931 with stepsize 5.5e-4
+error of 0.00025862963339076477
