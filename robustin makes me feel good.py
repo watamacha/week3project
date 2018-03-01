@@ -58,9 +58,13 @@ plt.show()
 #next use x fuzzing
 print('analyzing x fuzzed data sets')
 
-
+retx = [[],[],[],[],[],[],[],[],[],[]]
 for fuzzfactor in range(10):
     for j in range(20):
-        print('todo')
+        print('todo: fuzz')
         #create 20 datasets fuzzed proportional to fuzzfactor on x axis
+        data = dataset 
+        #run stuff
+        retx[fuzzfactor][j] = op.bruteSearch(op.f1,200,op.f1bounds,data).pop()[0]
+    plt.title('x fuzzfactor of ' + str(fuzzfactor) + ' out of 10')
     #create visuals for the given fuzzfactor using the 20 computed r parameters
