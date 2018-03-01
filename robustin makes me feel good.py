@@ -55,3 +55,12 @@ plt.errorbar(range(10),mu,yerr=sd,fmt='none',ecolor='yellow')
 plt.axhline(best[0],color='black')
 plt.show()
 
+#next use x fuzzing
+print('analyzing x fuzzed data sets')
+
+
+for fuzzfactor in range(10):
+    for j in range(20):
+        print('todo')
+        #create 20 datasets fuzzed proportional to fuzzfactor on x axis
+    #create visuals for the given fuzzfactor using the 20 computed r parameters
