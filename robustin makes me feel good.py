@@ -11,9 +11,14 @@ dataset = [ [0,1.0000000],
             [70,.5592012],
             [80,.2626372],  ]
 
-#begin by testing robustness of model for f1 using binary bitstring counting
+#begin by testing robustness of model for f1
+print('beginning robustness analysis on f1')
+best = op.bruteSearch(op.f1,200,op.f1bounds).pop()
 
 
+
+#first use subsets computed from binary bitstrings
+print('analyzing data subsets')
 retx = [[],[],[],[],[],[],[],[],[],[]]
 rety = [[],[],[],[],[],[],[],[],[],[]]
 def bit(a,b):
@@ -26,7 +31,21 @@ for searchindex in range(2**10 - 1):
     retx[len(data)].append(retval[0])
     rety[len(data)].append(retval[1])
 
-for i in range(10):
+mu = [0 for j in range(9)]
+for j in range(9):
+    i = j+1
     plt.title("distribution of optimums with data subset of size " + str(i))
-    plt.hist(retx[i],200,cumulative = True)#,weights=[1/y for y in rety[i]])
+    plt.hist(retx[i],1+(len(retx[i])//2),histtype='stepfilled',cumulative = False)#,weights=[1/y for y in rety[i]])
+    for x in retx[i]:
+        mu[j] += x
+    mu[j] /= len(retx[i])
+    plt.axvline(best[0],color='green')
+    plt.axvline(mu[j],color='red')
     plt.show()
+
+mu.append(best[0])
+plt.title('mean of optimums versus sample subset size')
+plt.plot(range(10),mu,'r-',range(10),mu,'bo')
+plt.axhline(best[0],color='green')
+plt.show()
+
