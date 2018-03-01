@@ -1,6 +1,6 @@
 #define dataset, known constant
 import math
-data = [[0,1.0000000],
+dataset = [[0,1.0000000],
      [15,.9743175],
      [25,.9575636],
      [35,.9373807],
@@ -22,9 +22,9 @@ def f2(n,params):
     return (s**n)*(g**((c**n) - 1))
 
 #define value function, sum of error squares. must be minimized.
-def v(funct, params):
+def v(funct, params, data = dataset):
     sum = 0.
-    for i in range(10):
+    for i in range(len(data)):
         sum += (funct(data[i][0],params) - data[i][1])**2
     return sum
 
@@ -48,62 +48,13 @@ f2bounds = [[lbs,ubs],
             [lbc,ubc]]
 
 
-
-#define a brute force by subdividing the boundaries into halves k times
-
-
-
-
 def getstepsizes(stepsperparam, parameterBounds):
     stepsize = [float((parameterBounds[p][1]-parameterBounds[p][0])/(stepsperparam)) for p in range(len(parameterBounds))]
-    print("stepsize array: ", stepsize)
+    #print("stepsize array: ", stepsize)
     return stepsize
 
-
-def bruteSearchold(funct, iterations, parameterBounds):
-    #initialize a coordinate variable, as well as a value list for graphing. here the last thing in pc is the return of the value function and the rest is an ordered list of parameter values
-    #values is not gonna be ordered since ordering in higher dimensions is an issue we can deal with afterwards, and if we have enough points to be troublesome to sort for line graphing 
-    #they'll be dense enough not to worry about it and just use a scatter
-    edge = 2*iterations + 1
-    df = len(parameterBounds)
-    pc = [0 for x in range(df)]
-    pc.append(0)
-    best = pc
-    pcx = pc
-    pcx.pop()
-    values = [pc for x in range(edge**df)]
-    #next we define some useful information for the iterator
-    #the iteration works by moving by stepsize in each direction using modular stuff
-    stepsize = pcx
-    for p in range(df):
-        lb = parameterBounds[p][0]
-        ub = parameterBounds[p][1]
-        stepsize[p] = (ub-lb)/(2**iterations)
-    #now we initialize pc to the first coordinate it must check
-    for p in range(df):
-        #ayyy james brown hows it goin
-        pc[p] = (parameterBounds[p][0])
-        pcx[p] = pc[p]
-
-    #here we iterate
-    #our index goes up to 2i-1^df, since thats how many points we want
-    for index in range(edge**df):
-        for d in range(df):
-            #every edge times the previous d goes up, this one goes up. done with floor division.
-            pcx[d] = stepsize[d] * (index//(edge**(d+1)))
-        pc = pcx
-        pc.append(v(funct,pcx))
-        values[index] = pc
-        if pc[df] > best[df]:
-            best = pc
-           
-    #here we return our coordinates, along with the 'best' coordinate. note that append is used instead of extend here.
-    #this is because extend stores the entire 'best' array in the last index of values, so values(len(values)-1) is always 'best', regardless of the size of 'best.'
-    #effectively we include the length information of 'best' implicitly in the structure of the return array, which also aids in visualization construction.
-    values.append(best)
-    return values
-
-def bruteSearch(funct, stepsperparam, parameterBounds):
+#define a brute force by subdividing the boundaries into halves k times
+def bruteSearch(funct, stepsperparam, parameterBounds, data = dataset):
     ###INPUT DEFINITION:
     #funct should be a function with args (n, params), where params is excepted to be the same size as parameterBounds. had issues with isinstance(x, function)
     if not True:
@@ -140,7 +91,7 @@ def bruteSearch(funct, stepsperparam, parameterBounds):
     #floats should be used for any non-indexing variables. ints/longs (handled automatically by dynamic typing) for any indexing variables.
     #define df, the number of parameters to optimize over
     df = len(parameterBounds)
-    print("degrees of freedom: ", df)
+    #print("degrees of freedom: ", df)
     #define co, the current parameter values (a coordinate in our parameter space)
     co = [0. for x in range(df)]
     #define ord, the evaluation of the value function at our current parameter value set (the value of a point in our value field)
@@ -158,7 +109,7 @@ def bruteSearch(funct, stepsperparam, parameterBounds):
     bcoord.append(bord)
     #next we calculate stepsizes using lower and upper bounds
     stepsize = [float((parameterBounds[p][1]-parameterBounds[p][0])/(stepsperparam)) for p in range(df)]
-    print("stepsize array: ", stepsize)
+    #print("stepsize array: ", stepsize)
     #we also define sco, the same as co but encoded as integer number of steps
     sco = [0 for x in co]
     #next we define our startpoint as the minimum of all parameters
@@ -166,7 +117,6 @@ def bruteSearch(funct, stepsperparam, parameterBounds):
     #now we define the number of points we will evaluate
     points = (stepsperparam + 1)**df
     ###END LOCALS DEFINITION
-
     ###FUNCTION DEFINITION:
     #now we begin iterating.
     #from our start coordinate, we move p1 up every step, and reset it every stepsperparam steps.
@@ -186,7 +136,7 @@ def bruteSearch(funct, stepsperparam, parameterBounds):
         #co = [stepsize[p] * sco[p] for p in range(df)]
         co = [float(((stepsize[p])*(sco[p]))+parameterBounds[p][0]) for p in range(df)]
         #we define a function to cleanly update ord and coord given co
-        ord = v(funct, co)
+        ord = v(funct, co, data)
         coord = co
         coord.append(ord)
         values.append(coord)
